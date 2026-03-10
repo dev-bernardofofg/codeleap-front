@@ -1,8 +1,6 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchPostsPage, createPost, updatePost, deletePost } from '../api/posts';
-
-const POSTS_KEY = ['posts'];
-const PAGE_SIZE = 10;
+import { postsService } from '../services/posts.service';
+import { QUERY_KEYS } from '../constants';
 
 export function usePosts(username: string) {
   const queryClient = useQueryClient();
@@ -15,8 +13,8 @@ export function usePosts(username: string) {
     hasNextPage,
     error,
   } = useInfiniteQuery({
-    queryKey: POSTS_KEY,
-    queryFn: ({ pageParam }) => fetchPostsPage(pageParam as number, PAGE_SIZE),
+    queryKey: QUERY_KEYS.posts,
+    queryFn: ({ pageParam }) => postsService.fetchPage(pageParam as number),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       if (!lastPage.next) return undefined;
@@ -28,21 +26,24 @@ export function usePosts(username: string) {
 
   const posts = data?.pages.flatMap((page) => page.results) ?? [];
 
+  const invalidatePosts = () =>
+    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.posts });
+
   const createMutation = useMutation({
     mutationFn: ({ title, content }: { title: string; content: string }) =>
-      createPost(username, title, content),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: POSTS_KEY }),
+      postsService.create(username, title, content),
+    onSuccess: invalidatePosts,
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, title, content }: { id: number; title: string; content: string }) =>
-      updatePost(id, title, content),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: POSTS_KEY }),
+      postsService.update(id, title, content),
+    onSuccess: invalidatePosts,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => deletePost(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: POSTS_KEY }),
+    mutationFn: (id: number) => postsService.delete(id),
+    onSuccess: invalidatePosts,
   });
 
   return {

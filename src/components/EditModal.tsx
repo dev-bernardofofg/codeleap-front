@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
-import type { Post } from '../api/posts';
+import type { Post } from '../types/post';
 import Modal from './Modal';
+import FormField from './FormField';
 
 interface EditModalProps {
   post: Post;
@@ -31,8 +32,7 @@ export default function EditModal({ post, onSave, onCancel }: EditModalProps) {
       <h2 className="font-bold text-xl mb-6">Edit item</h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div>
-          <label className="block text-sm mb-1">Title</label>
+        <FormField label="Title">
           <input
             type="text"
             placeholder="Hello world"
@@ -40,10 +40,9 @@ export default function EditModal({ post, onSave, onCancel }: EditModalProps) {
             onChange={(e) => setTitle(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary transition"
           />
-        </div>
+        </FormField>
 
-        <div>
-          <label className="block text-sm mb-1">Content</label>
+        <FormField label="Content">
           <textarea
             placeholder="Content here"
             value={content}
@@ -51,7 +50,7 @@ export default function EditModal({ post, onSave, onCancel }: EditModalProps) {
             rows={5}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary transition resize-none"
           />
-        </div>
+        </FormField>
 
         <div className="flex justify-end gap-4">
           <button

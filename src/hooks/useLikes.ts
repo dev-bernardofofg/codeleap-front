@@ -1,10 +1,9 @@
 import { useState, useCallback } from 'react';
-
-const STORAGE_KEY = 'cl_likes';
+import { STORAGE_KEYS } from '../constants';
 
 function getLikedIds(): Set<number> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEYS.likes);
     return new Set(raw ? JSON.parse(raw) : []);
   } catch {
     return new Set();
@@ -12,7 +11,7 @@ function getLikedIds(): Set<number> {
 }
 
 function saveLikedIds(ids: Set<number>) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...ids]));
+  localStorage.setItem(STORAGE_KEYS.likes, JSON.stringify([...ids]));
 }
 
 export function useLikes() {
@@ -21,11 +20,7 @@ export function useLikes() {
   const toggleLike = useCallback((postId: number) => {
     setLikedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(postId)) {
-        next.delete(postId);
-      } else {
-        next.add(postId);
-      }
+      next.has(postId) ? next.delete(postId) : next.add(postId);
       saveLikedIds(next);
       return next;
     });

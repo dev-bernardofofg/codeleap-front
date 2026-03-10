@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import FormField from './FormField';
 
 interface CreatePostProps {
   onSubmit: (title: string, content: string) => Promise<unknown>;
@@ -29,8 +30,7 @@ export default function CreatePost({ onSubmit }: CreatePostProps) {
       <h2 className="font-bold text-xl mb-6">What's on your mind?</h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div>
-          <label className="block text-sm mb-1">Title</label>
+        <FormField label="Title">
           <input
             type="text"
             placeholder="Hello world"
@@ -38,10 +38,9 @@ export default function CreatePost({ onSubmit }: CreatePostProps) {
             onChange={(e) => setTitle(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary transition"
           />
-        </div>
+        </FormField>
 
-        <div>
-          <label className="block text-sm mb-1">Content</label>
+        <FormField label="Content">
           <textarea
             placeholder="Content here"
             value={content}
@@ -49,7 +48,7 @@ export default function CreatePost({ onSubmit }: CreatePostProps) {
             rows={5}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary transition resize-none"
           />
-        </div>
+        </FormField>
 
         <div className="flex justify-end">
           <button
