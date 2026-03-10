@@ -2,15 +2,12 @@
 
 A social network application built as part of the [CodeLeap](https://codeleap.co.uk/) frontend coding test. Users can create, read, update and delete posts in a shared feed — powered by the CodeLeap public API.
 
-## Live Demo
-
-> _Deploy link here_
-
 ---
 
 ## Features
 
 ### Core
+
 - **Sign up** — username stored in `localStorage`, no backend required
 - **Create posts** — form with title and content, submit button disabled when fields are empty
 - **Read posts** — fetches the shared public feed sorted by most recent
@@ -18,6 +15,7 @@ A social network application built as part of the [CodeLeap](https://codeleap.co
 - **Delete posts** — confirmation modal before deleting (own posts only)
 
 ### Bonus
+
 - **Infinite scroll** — loads 10 posts at a time using IntersectionObserver
 - **Search** — real-time filter by title, author or content
 - **Likes** — heart toggle persisted in `localStorage`
@@ -29,12 +27,12 @@ A social network application built as part of the [CodeLeap](https://codeleap.co
 
 ## Tech Stack
 
-| Tool | Purpose |
-|---|---|
-| [React 19](https://react.dev/) | UI library |
-| [TypeScript](https://www.typescriptlang.org/) | Static typing |
-| [Vite](https://vite.dev/) | Build tool |
-| [Tailwind CSS v4](https://tailwindcss.com/) | Styling |
+| Tool                                            | Purpose                                      |
+| ----------------------------------------------- | -------------------------------------------- |
+| [React 19](https://react.dev/)                  | UI library                                   |
+| [TypeScript](https://www.typescriptlang.org/)   | Static typing                                |
+| [Vite](https://vite.dev/)                       | Build tool                                   |
+| [Tailwind CSS v4](https://tailwindcss.com/)     | Styling                                      |
 | [TanStack Query v5](https://tanstack.com/query) | Server state (useInfiniteQuery, useMutation) |
 
 ---
@@ -67,6 +65,7 @@ src/
 ```
 
 **Key design decisions:**
+
 - `http.ts` is a generic fetch abstraction — the service layer never calls `fetch` directly, making it easy to extend (add auth headers, retry logic) or mock in tests
 - All string/number constants live in `constants/index.ts` — zero magic values in component code
 - Icons are components, not inline SVGs — single source of truth, consistent sizing
@@ -92,12 +91,12 @@ npm run build
 
 Integrates with the CodeLeap public test API:
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/careers/?limit=10&offset=0` | Paginated list of posts |
-| `POST` | `/careers/` | Create a new post |
-| `PATCH` | `/careers/{id}/` | Update title and content |
-| `DELETE` | `/careers/{id}/` | Delete a post |
+| Method   | Endpoint                      | Description              |
+| -------- | ----------------------------- | ------------------------ |
+| `GET`    | `/careers/?limit=10&offset=0` | Paginated list of posts  |
+| `POST`   | `/careers/`                   | Create a new post        |
+| `PATCH`  | `/careers/{id}/`              | Update title and content |
+| `DELETE` | `/careers/{id}/`              | Delete a post            |
 
 Base URL: `https://dev.codeleap.co.uk/careers/`
 
