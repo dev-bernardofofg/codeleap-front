@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #7695EC;
+  --color-danger: #FF5151;
+  --color-success: #47B960;
+  --color-app-bg: #DDDDDD;
+  --color-card-header: #7695EC;
+  --font-sans: 'Roboto', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #DDDDDD;
+  font-family: 'Roboto', system-ui, sans-serif;
+}
