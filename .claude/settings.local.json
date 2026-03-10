@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm create:*)",
+      "Bash(npx create-vite@latest d:/Aprendizado/entrevistas/codeleap-test --template react-ts)",
+      "Bash(mkdir d:/temp-vite)",
+      "Bash(npx create-vite@latest d:/temp-vite/codeleap --template react-ts)",
+      "Bash(mkdir /d/temp-codeleap)",
+      "Bash(npx create-vite@latest /d/temp-codeleap/app --template react-ts)",
+      "Read(//d/temp-codeleap/**)",
+      "Read(//c/Users/Bernardo/**)",
+      "Bash(npx create-vite@latest codeleap-temp --template react-ts)",
+      "Bash(cp -r /c/Users/Bernardo/codeleap-temp/. d:/Aprendizado/entrevistas/codeleap-test/)",
+      "Bash(rm -rf /c/Users/Bernardo/codeleap-temp)",
+      "Bash(rm -rf d:/Aprendizado/entrevistas/codeleap-test/src)",
+      "Bash(mkdir -p d:/Aprendizado/entrevistas/codeleap-test/src/api d:/Aprendizado/entrevistas/codeleap-test/src/utils d:/Aprendizado/entrevistas/codeleap-test/src/components d:/Aprendizado/entrevistas/codeleap-test/src/hooks)",
+      "Bash(npm run:*)"
+    ]
+  }
+}

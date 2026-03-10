@@ -1,16 +1,32 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchPosts, createPost, updatePost, deletePost } from '../api/posts';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchPostsPage, createPost, updatePost, deletePost } from '../api/posts';
 
 const POSTS_KEY = ['posts'];
+const PAGE_SIZE = 10;
 
 export function usePosts(username: string) {
   const queryClient = useQueryClient();
 
-  const { data: posts = [], isLoading, error } = useQuery({
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    error,
+  } = useInfiniteQuery({
     queryKey: POSTS_KEY,
-    queryFn: fetchPosts,
+    queryFn: ({ pageParam }) => fetchPostsPage(pageParam as number, PAGE_SIZE),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.next) return undefined;
+      const url = new URL(lastPage.next);
+      return parseInt(url.searchParams.get('offset') ?? '0', 10);
+    },
     enabled: !!username,
   });
+
+  const posts = data?.pages.flatMap((page) => page.results) ?? [];
 
   const createMutation = useMutation({
     mutationFn: ({ title, content }: { title: string; content: string }) =>
@@ -32,6 +48,9 @@ export function usePosts(username: string) {
   return {
     posts,
     isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
     error: error ? 'Failed to load posts. Please try again.' : null,
     handleCreate: (title: string, content: string) =>
       createMutation.mutateAsync({ title, content }),

@@ -6,7 +6,7 @@ export interface Post {
   content: string;
 }
 
-interface ApiResponse {
+export interface PostsPage {
   count: number;
   next: string | null;
   previous: string | null;
@@ -15,11 +15,10 @@ interface ApiResponse {
 
 const BASE_URL = 'https://dev.codeleap.co.uk/careers/';
 
-export async function fetchPosts(): Promise<Post[]> {
-  const res = await fetch(`${BASE_URL}?limit=100`);
+export async function fetchPostsPage(offset: number, limit = 10): Promise<PostsPage> {
+  const res = await fetch(`${BASE_URL}?limit=${limit}&offset=${offset}`);
   if (!res.ok) throw new Error('Failed to fetch posts');
-  const data: ApiResponse = await res.json();
-  return data.results;
+  return res.json();
 }
 
 export async function createPost(
