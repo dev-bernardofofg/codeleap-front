@@ -1,42 +1,42 @@
-import { useState, useEffect, useCallback } from 'react';
-import { type Post, fetchPosts, createPost, updatePost, deletePost } from '../api/posts';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchPosts, createPost, updatePost, deletePost } from '../api/posts';
+
+const POSTS_KEY = ['posts'];
 
 export function usePosts(username: string) {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const loadPosts = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchPosts();
-      setPosts(data);
-    } catch {
-      setError('Failed to load posts. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { data: posts = [], isLoading, error } = useQuery({
+    queryKey: POSTS_KEY,
+    queryFn: fetchPosts,
+    enabled: !!username,
+  });
 
-  useEffect(() => {
-    if (username) loadPosts();
-  }, [username, loadPosts]);
+  const createMutation = useMutation({
+    mutationFn: ({ title, content }: { title: string; content: string }) =>
+      createPost(username, title, content),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: POSTS_KEY }),
+  });
 
-  const handleCreate = async (title: string, content: string) => {
-    const newPost = await createPost(username, title, content);
-    setPosts((prev) => [newPost, ...prev]);
+  const updateMutation = useMutation({
+    mutationFn: ({ id, title, content }: { id: number; title: string; content: string }) =>
+      updatePost(id, title, content),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: POSTS_KEY }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deletePost(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: POSTS_KEY }),
+  });
+
+  return {
+    posts,
+    isLoading,
+    error: error ? 'Failed to load posts. Please try again.' : null,
+    handleCreate: (title: string, content: string) =>
+      createMutation.mutateAsync({ title, content }),
+    handleUpdate: (id: number, title: string, content: string) =>
+      updateMutation.mutateAsync({ id, title, content }),
+    handleDelete: (id: number) => deleteMutation.mutateAsync(id),
   };
-
-  const handleDelete = async (id: number) => {
-    await deletePost(id);
-    setPosts((prev) => prev.filter((p) => p.id !== id));
-  };
-
-  const handleUpdate = async (id: number, title: string, content: string) => {
-    const updated = await updatePost(id, title, content);
-    setPosts((prev) => prev.map((p) => (p.id === id ? updated : p)));
-  };
-
-  return { posts, loading, error, handleCreate, handleDelete, handleUpdate };
 }

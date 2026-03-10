@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 
 interface CreatePostProps {
-  onSubmit: (title: string, content: string) => Promise<void>;
+  onSubmit: (title: string, content: string) => Promise<unknown>;
 }
 
 export default function CreatePost({ onSubmit }: CreatePostProps) {

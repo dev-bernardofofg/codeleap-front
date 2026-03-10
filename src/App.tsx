@@ -15,7 +15,7 @@ export default function App() {
   const [deleteTarget, setDeleteTarget] = useState<Post | null>(null);
   const [editTarget, setEditTarget] = useState<Post | null>(null);
 
-  const { posts, loading, error, handleCreate, handleDelete, handleUpdate } =
+  const { posts, isLoading, error, handleCreate, handleDelete, handleUpdate } =
     usePosts(username);
 
   function handleLogin(name: string) {
@@ -47,7 +47,7 @@ export default function App() {
         <main className="p-6">
           <CreatePost onSubmit={handleCreate} />
 
-          {loading && (
+          {isLoading && (
             <div className="text-center py-12 text-gray-500">Loading posts...</div>
           )}
 
@@ -55,7 +55,7 @@ export default function App() {
             <div className="text-center py-6 text-danger">{error}</div>
           )}
 
-          {!loading && posts.length === 0 && !error && (
+          {!isLoading && posts.length === 0 && !error && (
             <div className="text-center py-12 text-gray-500">
               No posts yet. Be the first to share something!
             </div>
